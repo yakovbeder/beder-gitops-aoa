@@ -24,6 +24,21 @@ beder-gitops-aoa/
    - **ApplicationSets** (sync wave 1) - Discovers and deploys applications from cluster repositories
 3. **ApplicationSets**: Each ApplicationSet scans its cluster's Git repository and creates ArgoCD Applications for discovered directories
 
+## Cluster Repository Structure
+
+Each cluster repository (e.g., `cluster1.git`) should have the following structure:
+
+```
+cluster1/
+├── cluster-scope/      # Cluster-scoped resources (ConfigMaps, IngressOperator config, etc.)
+├── operators/          # Operator configurations (monitoring, logging, trident, etc.)
+├── etcd-backup/        # ETCD backup configurations
+├── machineconfig/      # MachineConfig resources
+└── garbagecollection/   # Garbage collection configurations
+```
+
+The ApplicationSet will automatically discover each top-level directory and create an ArgoCD Application for it. Each Application will recursively deploy all manifests found within its directory.
+
 ## Adding a New Cluster
 
 To add a new cluster, update `app-of-apps/values.yaml`:
