@@ -1,0 +1,24 @@
+# Default values for App of Apps - ApplicationSets management
+
+# AppProjects configuration
+appprojects:
+  - name: cluster1
+    syncWave: "0"
+  - name: cluster2
+    syncWave: "0"
+
+# List of clusters with their configurations
+clusters:
+  - name: cluster1
+    repoURL: https://github.com/yakovbeder/cluster1.git
+    targetRevision: master
+    project: cluster1
+    destination: cluster1
+    syncWave: "1"
+  - name: cluster2
+    repoURL: https://github.com/yakovbeder/cluster2.git
+    targetRevision: master
+    project: cluster2
+    destination: cluster2
+    syncWave: "1"
+

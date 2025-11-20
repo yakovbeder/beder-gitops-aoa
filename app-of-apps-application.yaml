@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yakovbeder/beder-gitops-aoa.git
+    targetRevision: master
+    path: app-of-apps
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: openshift-gitops
+  syncPolicy:
+    automated: {}
+

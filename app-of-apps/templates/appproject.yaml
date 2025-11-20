@@ -1,0 +1,21 @@
+{{- range .Values.appprojects }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .name }}
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
+spec:
+  description: ArgoCD project for {{ .name }}
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+{{- end }}
+

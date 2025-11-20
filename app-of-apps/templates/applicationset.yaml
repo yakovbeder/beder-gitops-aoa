@@ -1,0 +1,36 @@
+{{- range .Values.clusters }}
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {{ .name }}
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: {{ .repoURL }}
+        revision: {{ .targetRevision }}
+        directories:
+          - path: '*'
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+    spec:
+      project: {{ .project }}
+      source:
+        repoURL: {{ .repoURL }}
+        targetRevision: {{ .targetRevision }}
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: ".*"
+      destination:
+        name: {{ .destination }}
+      syncPolicy:
+        automated: {}
+---
+{{- end }}
+
