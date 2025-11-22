@@ -4,17 +4,22 @@ projects:
   - name: cluster2
     syncWave: "0"
 
+global:
+  repoURL: https://github.com/yakovbeder/global-configs.git
+  targetRevision: master
+  project: default
+  syncWave: "1"
+
 clusters:
   - name: cluster1
     repoURL: https://github.com/yakovbeder/cluster1.git
     targetRevision: master
     project: cluster1
     destination: cluster1
-    syncWave: "1"
+    syncWave: "2"
   - name: cluster2
     repoURL: https://github.com/yakovbeder/cluster2.git
     targetRevision: master
     project: cluster2
     destination: cluster2
-    syncWave: "1"
-
+    syncWave: "2"

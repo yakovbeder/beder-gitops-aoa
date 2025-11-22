@@ -1,0 +1,47 @@
+{{- if .Values.global }}
+# Global ApplicationSet with directory discovery
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: global
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: '{{ .Values.global.syncWave }}'
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  syncPolicy:
+    preserveResourcesOnDeletion: true
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+              {{- range .Values.clusters }}
+              - cluster: {{ .name }}
+                destination: {{ .destination }}
+              {{- end }}
+          - git:
+              repoURL: {{ .Values.global.repoURL }}
+              revision: {{ .Values.global.targetRevision }}
+              directories:
+                - path: '*'
+  template:
+    metadata:
+      name: '{{cluster}}-{{.path.basename}}'
+    spec:
+      project: {{ .Values.global.project }}
+      source:
+        repoURL: {{ .Values.global.repoURL }}
+        targetRevision: {{ .Values.global.targetRevision }}
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: ".*"
+      destination:
+        name: {{destination}}
+      syncPolicy:
+        automated: {}
+---
+{{- end }}
+
