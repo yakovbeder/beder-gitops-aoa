@@ -25,7 +25,7 @@ spec:
               repoURL: {{ .Values.global.repoURL }}
               revision: {{ .Values.global.targetRevision }}
               directories:
-                - path: '*'
+                - path: '{{ .Values.global.path }}/*'
   template:
     metadata:
       name: '{{cluster}}-{{.path.basename}}'
