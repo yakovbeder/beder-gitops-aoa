@@ -1,4 +1,4 @@
-appprojects:
+projects:
   - name: cluster1
     syncWave: "0"
   - name: cluster2
