@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-ca-bundle
+  namespace: openshift-config
+data:
+  ca-bundle.crt: |
+    # Place your custom CA certificate bundle here
+    # -----BEGIN CERTIFICATE-----
+    # ...
+    # -----END CERTIFICATE-----
+

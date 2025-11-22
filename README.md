@@ -8,13 +8,17 @@ This repository contains the App-of-Apps pattern for managing multiple OpenShift
 beder-gitops-aoa/
 ├── README.md
 ├── app-of-apps-application.yaml    # Root ArgoCD Application
-└── app-of-apps/                    # Helm chart
-    ├── Chart.yaml                  # Helm chart definition
-    ├── values.yaml                 # Cluster configurations
-    └── templates/
-        ├── appproject.yaml              # Generates AppProjects (one per cluster)
-        ├── applicationset.yaml         # Generates ApplicationSets (one per cluster)
-        └── applicationset-global.yaml  # Generates ApplicationSet (one for all clusters)
+├── app-of-apps/                    # Helm chart
+│   ├── Chart.yaml                  # Helm chart definition
+│   ├── values.yaml                 # Cluster configurations
+│   └── templates/
+│       ├── appproject.yaml              # Generates AppProjects (one per cluster)
+│       ├── applicationset.yaml         # Generates ApplicationSets (one per cluster)
+│       └── applicationset-global.yaml  # Generates ApplicationSet (one for all clusters)
+└── global-configs/                 # Global configurations directory
+    ├── htpasswd/                   # Authentication configuration
+    ├── certificates/               # Shared certificates
+    └── ...                         # Other shared configurations
 ```
 
 ## How It Works
@@ -25,7 +29,7 @@ beder-gitops-aoa/
    - **Global ApplicationSet** (sync wave 1) - Discovers and deploys global configurations to all clusters
    - **Cluster ApplicationSets** (sync wave 2) - Discovers and deploys applications from cluster repositories
 3. **ApplicationSets**: 
-   - **Global**: Scans the global configuration repository and deploys all directories to all clusters
+   - **Global**: Scans the `global-configs/` directory in the same repository and deploys all directories to all clusters
    - **Cluster-specific**: Each ApplicationSet scans its cluster's Git repository and creates ArgoCD Applications for discovered directories
 
 ## Cluster Repository Structure
@@ -45,7 +49,7 @@ The ApplicationSet will automatically discover each top-level directory and crea
 
 ## Global Configuration
 
-Global configurations are shared across all clusters (e.g., htpasswd, certificates). They are deployed from a separate repository to all clusters automatically.
+Global configurations are shared across all clusters (e.g., htpasswd, certificates). They are stored in the `global-configs/` directory at the repository root and deployed to all clusters automatically.
 
 ### Configuration
 
@@ -53,18 +57,21 @@ In `app-of-apps/values.yaml`, add the `global` section:
 
 ```yaml
 global:
-  repoURL: https://github.com/yakovbeder/global-configs.git
+  repoURL: https://github.com/yakovbeder/beder-gitops-aoa.git
   targetRevision: master
   project: default
+  path: "global-configs"
   syncWave: "1"
 ```
 
 The global ApplicationSet will:
-- Discover all directories in the global repository
+- Discover all directories in the `global-configs/` directory of the same repository
 - Deploy each directory to all clusters defined in `clusters`
 - Create Applications named `{cluster-name}-{directory-name}`
 
-### Global Repository Structure
+### Global Configuration Directory Structure
+
+The global configurations are stored in the `global-configs/` directory at the repository root:
 
 ```
 global-configs/
@@ -102,9 +109,10 @@ clusters:
 - `syncWave`: Deployment order (always "0")
 
 ### Global
-- `repoURL`: Git repository URL containing global configurations
+- `repoURL`: Git repository URL (same as app-of-apps repository)
 - `targetRevision`: Branch or tag (e.g., `master`, `main`)
 - `project`: ArgoCD project name (typically "default")
+- `path`: Directory path containing global configurations (e.g., "global-configs")
 - `syncWave`: Deployment order (always "1")
 
 ### Clusters
