@@ -68,73 +68,65 @@ sequenceDiagram
 ## Repository Structure Flow
 
 ```mermaid
-graph TB
-    subgraph "beder-gitops-aoa repo"
-        RootApp[app-of-apps-application.yaml<br/>Root Application] --> Helm[Helm Chart<br/>app-of-apps/]
-        Values[values.yaml<br/>Configuration] --> Helm
-        GlobalDir[global-configs/<br/>htpasswd/<br/>certificates/]
+graph LR
+    subgraph AOA["🔵 beder-gitops-aoa Repository"]
+        RootApp[Root Application<br/>app-of-apps-application.yaml]
+        Values[values.yaml]
+        GlobalDir[global-configs/<br/>Directories]
     end
     
-    subgraph "cluster1 repo"
-        C1Dir1[cluster-scope/]
-        C1Dir2[operators/]
-        C1Dir3[etcd-backup/]
-        C1Dir4[machineconfig/]
-        C1Dir5[garbagecollection/]
+    subgraph C1Repo["🟣 cluster1 Repository"]
+        C1Dirs[Directories:<br/>cluster-scope, operators,<br/>etcd-backup, machineconfig,<br/>garbagecollection]
     end
     
-    subgraph "cluster2 repo"
-        C2Dir1[cluster-scope/]
-        C2Dir2[operators/]
-        C2Dir3[etcd-backup/]
-        C2Dir4[machineconfig/]
-        C2Dir5[garbagecollection/]
+    subgraph C2Repo["🟣 cluster2 Repository"]
+        C2Dirs[Directories:<br/>cluster-scope, operators,<br/>etcd-backup, machineconfig,<br/>garbagecollection]
     end
     
-    subgraph "ArgoCD (openshift-gitops)"
-        Helm --> Proj1[AppProject: cluster1]
-        Helm --> Proj2[AppProject: cluster2]
-        Helm -.->|if enabled: true| GlobalAS[Global ApplicationSet<br/>Git Generator]
-        Helm --> C1AS[cluster1 ApplicationSet<br/>Git Generator]
-        Helm --> C2AS[cluster2 ApplicationSet<br/>Git Generator]
+    subgraph ArgoCD["ArgoCD (openshift-gitops namespace)"]
+        Helm[Helm Chart]
+        Proj1[AppProject<br/>cluster1]
+        Proj2[AppProject<br/>cluster2]
+        GlobalAS[Global ApplicationSet<br/>Git Generator]
+        C1AS[cluster1 ApplicationSet<br/>Git Generator]
+        C2AS[cluster2 ApplicationSet<br/>Git Generator]
     end
+    
+    subgraph Apps["Generated Applications"]
+        GlobalApps[Global Apps:<br/>cluster1-htpasswd<br/>cluster1-certificates<br/>cluster2-htpasswd<br/>cluster2-certificates]
+        C1Apps[cluster1 Apps:<br/>cluster1-cluster-scope<br/>cluster1-operators<br/>cluster1-etcd-backup<br/>cluster1-machineconfig<br/>cluster1-garbagecollection]
+        C2Apps[cluster2 Apps:<br/>cluster2-cluster-scope<br/>cluster2-operators<br/>cluster2-etcd-backup<br/>cluster2-machineconfig<br/>cluster2-garbagecollection]
+    end
+    
+    RootApp --> Helm
+    Values --> Helm
+    Helm --> Proj1
+    Helm --> Proj2
+    Helm -.->|if enabled: true| GlobalAS
+    Helm --> C1AS
+    Helm --> C2AS
     
     GlobalAS -.->|Discovers| GlobalDir
-    GlobalAS --> GC1[cluster1-htpasswd]
-    GlobalAS --> GC2[cluster1-certificates]
-    GlobalAS --> GC3[cluster2-htpasswd]
-    GlobalAS --> GC4[cluster2-certificates]
+    C1AS -.->|Discovers| C1Dirs
+    C2AS -.->|Discovers| C2Dirs
     
-    C1AS -.->|Discovers| C1Dir1
-    C1AS -.->|Discovers| C1Dir2
-    C1AS -.->|Discovers| C1Dir3
-    C1AS -.->|Discovers| C1Dir4
-    C1AS -.->|Discovers| C1Dir5
-    C1AS --> App1[cluster1-cluster-scope]
-    C1AS --> App2[cluster1-operators]
-    C1AS --> App3[cluster1-etcd-backup]
-    C1AS --> App4[cluster1-machineconfig]
-    C1AS --> App5[cluster1-garbagecollection]
-    
-    C2AS -.->|Discovers| C2Dir1
-    C2AS -.->|Discovers| C2Dir2
-    C2AS -.->|Discovers| C2Dir3
-    C2AS -.->|Discovers| C2Dir4
-    C2AS -.->|Discovers| C2Dir5
-    C2AS --> App6[cluster2-cluster-scope]
-    C2AS --> App7[cluster2-operators]
-    C2AS --> App8[cluster2-etcd-backup]
-    C2AS --> App9[cluster2-machineconfig]
-    C2AS --> App10[cluster2-garbagecollection]
+    GlobalAS --> GlobalApps
+    C1AS --> C1Apps
+    C2AS --> C2Apps
     
     style RootApp fill:#e1f5ff,stroke:#01579b,stroke-width:2px
     style Values fill:#fff9c4,stroke:#f57f17,stroke-width:2px
-    style Helm fill:#ffcc80,stroke:#e65100,stroke-width:2px
+    style Helm fill:#ffcc80,stroke:#e65100,stroke-width:3px
     style GlobalAS fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     style C1AS fill:#f8bbd0,stroke:#c2185b,stroke-width:2px
     style C2AS fill:#f8bbd0,stroke:#c2185b,stroke-width:2px
     style Proj1 fill:#ffe0b2,stroke:#e65100,stroke-width:1px
     style Proj2 fill:#ffe0b2,stroke:#e65100,stroke-width:1px
+    style AOA fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    style C1Repo fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style C2Repo fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style ArgoCD fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style Apps fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
 ```
 
 ## ApplicationSet Matrix Generator
@@ -159,7 +151,7 @@ graph TD
     Matrix --> Comb3[Combination 3:<br/>cluster2 × htpasswd]
     Matrix --> Comb4[Combination 4:<br/>cluster2 × certificates]
     
-    Template[Application Template<br/>name: '{{cluster}}-{{.path.basename}}'<br/>destination: {{destination}}<br/>path: '{{.path.path}}'<br/>project: default] --> Comb1
+    Template[Application Template<br/>name: cluster-path.basename<br/>destination: destination<br/>path: path.path<br/>project: default] --> Comb1
     Template --> Comb2
     Template --> Comb3
     Template --> Comb4
@@ -183,4 +175,9 @@ graph TD
     style App3 fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px
     style App4 fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px
 ```
+
+**Note:** The Application Template uses Go template syntax:
+- `name: '{{cluster}}-{{.path.basename}}'` - Combines cluster name and directory basename
+- `destination: {{destination}}` - Uses destination from List Generator
+- `path: '{{.path.path}}'` - Uses full path from Git Generator
 
