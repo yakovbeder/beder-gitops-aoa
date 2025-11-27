@@ -143,7 +143,7 @@ graph TD
     Pattern --> D1[Discovered:<br/>global-configs/htpasswd<br/>basename: htpasswd]
     Pattern --> D2[Discovered:<br/>global-configs/certificates<br/>basename: certificates]
     
-    Matrix[Matrix Generator<br/>Creates Cartesian Product] --> ListGen
+    Matrix[Matrix Generator<br/>Combines all pairs:<br/>2 clusters × 2 directories = 4 apps] --> ListGen
     Matrix --> GitGen
     
     Matrix --> Comb1[Combination 1:<br/>cluster1 × htpasswd]
@@ -175,9 +175,4 @@ graph TD
     style App3 fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px
     style App4 fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px
 ```
-
-**Note:** The Application Template uses Go template syntax:
-- `name: '{{cluster}}-{{.path.basename}}'` - Combines cluster name and directory basename
-- `destination: {{destination}}` - Uses destination from List Generator
-- `path: '{{.path.path}}'` - Uses full path from Git Generator
 
