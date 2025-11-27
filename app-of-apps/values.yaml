@@ -5,8 +5,9 @@ projects:
     syncWave: "0"
 
 global:
+  enabled: true
   repoURL: https://github.com/yakovbeder/beder-gitops-aoa.git
-  targetRevision: master
+  targetRevision: main
   project: default
   path: "global-configs"
   syncWave: "1"
@@ -14,13 +15,13 @@ global:
 clusters:
   - name: cluster1
     repoURL: https://github.com/yakovbeder/cluster1.git
-    targetRevision: master
+    targetRevision: main
     project: cluster1
     destination: cluster1
     syncWave: "2"
   - name: cluster2
     repoURL: https://github.com/yakovbeder/cluster2.git
-    targetRevision: master
+    targetRevision: main
     project: cluster2
     destination: cluster2
     syncWave: "2"

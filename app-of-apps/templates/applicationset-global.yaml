@@ -1,5 +1,4 @@
-{{- if .Values.global }}
-# Global ApplicationSet with directory discovery
+{{- if and .Values.global .Values.global.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:

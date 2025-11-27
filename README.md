@@ -57,12 +57,15 @@ In `app-of-apps/values.yaml`, add the `global` section:
 
 ```yaml
 global:
+  enabled: true
   repoURL: https://github.com/yakovbeder/beder-gitops-aoa.git
-  targetRevision: master
+  targetRevision: main
   project: default
   path: "global-configs"
   syncWave: "1"
 ```
+
+**Note**: Set `enabled: false` to disable the global ApplicationSet without removing the configuration.
 
 The global ApplicationSet will:
 - Discover all directories in the `global-configs/` directory of the same repository
@@ -96,7 +99,7 @@ projects:
 clusters:
   - name: cluster3
     repoURL: https://github.com/yakovbeder/cluster3.git
-    targetRevision: master
+    targetRevision: main
     project: cluster3
     destination: cluster3
     syncWave: "2"
@@ -109,8 +112,9 @@ clusters:
 - `syncWave`: Deployment order (always "0")
 
 ### Global
+- `enabled`: Enable or disable the global ApplicationSet (default: `true`)
 - `repoURL`: Git repository URL (same as app-of-apps repository)
-- `targetRevision`: Branch or tag (e.g., `master`, `main`)
+- `targetRevision`: Branch or tag (e.g., `main`, `master`)
 - `project`: ArgoCD project name (typically "default")
 - `path`: Directory path containing global configurations (e.g., "global-configs")
 - `syncWave`: Deployment order (always "1")
@@ -118,7 +122,7 @@ clusters:
 ### Clusters
 - `name`: Cluster identifier
 - `repoURL`: Git repository URL containing cluster manifests
-- `targetRevision`: Branch or tag (e.g., `master`, `main`)
+- `targetRevision`: Branch or tag (e.g., `main`, `master`)
 - `project`: ArgoCD project name (should match cluster name)
 - `destination`: Cluster name as registered in ArgoCD
 - `syncWave`: Deployment order (always "2")
