@@ -87,7 +87,7 @@ graph LR
         Helm[Helm Chart]
         Proj1[AppProject<br/>cluster1]
         Proj2[AppProject<br/>cluster2]
-        GlobalAS[Global ApplicationSet<br/>Git Generator]
+        GlobalAS[Global ApplicationSet<br/>Matrix Generator<br/>List + Git]
         C1AS[cluster1 ApplicationSet<br/>Git Generator]
         C2AS[cluster2 ApplicationSet<br/>Git Generator]
     end
@@ -106,9 +106,10 @@ graph LR
     Helm --> C1AS
     Helm --> C2AS
     
-    GlobalAS -.->|Discovers| GlobalDir
-    C1AS -.->|Discovers| C1Dirs
-    C2AS -.->|Discovers| C2Dirs
+    Values -.->|List Generator reads<br/>.Values.clusters| GlobalAS
+    GlobalAS -.->|Git Generator discovers<br/>global-configs/*| GlobalDir
+    C1AS -.->|Git Generator<br/>Discovers| C1Dirs
+    C2AS -.->|Git Generator<br/>Discovers| C2Dirs
     
     GlobalAS --> GlobalApps
     C1AS --> C1Apps
