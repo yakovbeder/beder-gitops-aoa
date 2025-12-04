@@ -19,13 +19,13 @@ spec:
           - path: '*'
   template:
     metadata:
-      name: '{{ .name }}-{{.path.basename}}'
+      name: '{{ .name }}-{{ "{{.path.basename}}" }}'
     spec:
       project: {{ .project }}
       source:
         repoURL: {{ .repoURL }}
         targetRevision: {{ .targetRevision }}
-        path: '{{.path.path}}'
+        path: '{{ "{{.path.path}}" }}'
         directory:
           recurse: true
           exclude: ".*"

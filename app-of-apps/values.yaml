@@ -1,27 +1,27 @@
-projects:
-  - name: cluster1
-    syncWave: "0"
-  - name: cluster2
-    syncWave: "0"
+# projects:
+#   - name: cluster1
+#     syncWave: "0"
+#   - name: cluster2
+#     syncWave: "0"
 
 global:
-  enabled: true
-  repoURL: https://github.com/yakovbeder/beder-gitops-aoa.git
+  enabled: false
+  repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git
   targetRevision: main
   project: default
   path: "global-configs"
   syncWave: "1"
 
 clusters:
-  - name: cluster1
-    repoURL: https://github.com/yakovbeder/cluster1.git
+  - name: in-cluster
+    repoURL: git@github.com:yakovbeder/in-cluster.git
     targetRevision: main
-    project: cluster1
-    destination: cluster1
+    project: default
+    destination: in-cluster
     syncWave: "2"
-  - name: cluster2
-    repoURL: https://github.com/yakovbeder/cluster2.git
-    targetRevision: main
-    project: cluster2
-    destination: cluster2
-    syncWave: "2"
+  # - name: cluster2
+  #   repoURL: git@github.com:yakovbeder/cluster2.git
+  #   targetRevision: main
+  #   project: cluster2
+  #   destination: cluster2
+  #   syncWave: "2"
