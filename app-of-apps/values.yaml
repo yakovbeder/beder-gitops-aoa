@@ -5,7 +5,7 @@
 #     syncWave: "0"
 
 global:
-  enabled: false
+  enabled: true
   repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git
   targetRevision: main
   project: default
