@@ -6,8 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/yakovbeder/beder-gitops-aoa.git
-    targetRevision: master
+    repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git
+    targetRevision: main
     path: app-of-apps
     helm:
       valueFiles:
