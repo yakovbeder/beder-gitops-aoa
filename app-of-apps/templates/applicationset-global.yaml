@@ -27,18 +27,18 @@ spec:
                 - path: '{{ .Values.global.path }}/*'
   template:
     metadata:
-      name: '{{.cluster}}-{{.path.basename}}'
+      name: '{{ "{{.cluster}}" }}-{{ "{{.path.basename}}" }}'
     spec:
       project: {{ .Values.global.project }}
       source:
         repoURL: {{ .Values.global.repoURL }}
         targetRevision: {{ .Values.global.targetRevision }}
-        path: '{{.path.path}}'
+        path: '{{ "{{.path.path}}" }}'
         directory:
           recurse: true
           exclude: ".*"
       destination:
-        name: {{.destination}}
+        name: {{ "{{.destination}}" }}
       syncPolicy:
         automated: {}
 ---
