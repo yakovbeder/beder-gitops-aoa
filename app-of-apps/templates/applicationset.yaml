@@ -17,11 +17,6 @@ spec:
         revision: {{ .targetRevision }}
         directories:
           - path: '*'
-        {{- if .sshPrivateKeySecret }}
-        sshPrivateKeySecret:
-          name: {{ .sshPrivateKeySecret }}
-          key: sshPrivateKey
-        {{- end }}
   template:
     metadata:
       name: '{{ .name }}-{{ "{{.path.basename}}" }}'

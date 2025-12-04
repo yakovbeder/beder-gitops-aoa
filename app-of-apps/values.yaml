@@ -19,7 +19,6 @@ clusters:
     project: default
     destination: in-cluster
     syncWave: "2"
-    sshPrivateKeySecret: repo-1003540542
   # - name: cluster2
   #   repoURL: git@github.com:yakovbeder/cluster2.git
   #   targetRevision: main
