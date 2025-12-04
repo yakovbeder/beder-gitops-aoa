@@ -39,8 +39,7 @@ spec:
           exclude: ".*"
       destination:
         name: {{ "{{.destination}}" }}
-      syncPolicy:
-        automated: {}
+      syncPolicy: {}
 ---
 {{- end }}
 
