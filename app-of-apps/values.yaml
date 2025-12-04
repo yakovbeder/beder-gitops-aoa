@@ -16,7 +16,7 @@ clusters:
   - name: in-cluster
     repoURL: git@github.com:yakovbeder/in-cluster.git
     targetRevision: main
-    project: default
+    project: in-cluster
     destination: in-cluster
     syncWave: "2"
   # - name: cluster2
