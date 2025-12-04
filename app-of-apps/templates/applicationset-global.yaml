@@ -27,7 +27,7 @@ spec:
                 - path: '{{ .Values.global.path }}/*'
   template:
     metadata:
-      name: '{{ "{{.cluster}}" }}-{{ "{{.path.basename}}" }}'
+      name: 'global-{{ "{{.cluster}}" }}-{{ "{{.path.basename}}" }}'
     spec:
       project: {{ .Values.global.project }}
       source:
