@@ -18,6 +18,8 @@ beder-gitops-aoa/
 └── global-configs/                 # Global configurations directory
     ├── htpasswd/                   # Authentication configuration
     ├── certificates/               # Shared certificates
+    ├── resources/                  # Namespace resources
+    │   └── namespaces/            # Namespace definitions
     └── ...                         # Other shared configurations
 ```
 
@@ -58,7 +60,7 @@ In `app-of-apps/values.yaml`, add the `global` section:
 ```yaml
 global:
   enabled: true
-  repoURL: https://github.com/yakovbeder/beder-gitops-aoa.git
+  repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git
   targetRevision: main
   project: default
   path: "global-configs"
@@ -80,6 +82,8 @@ The global configurations are stored in the `global-configs/` directory at the r
 global-configs/
 ├── htpasswd/          # Authentication configuration
 ├── certificates/      # Shared certificates
+├── resources/         # Namespace resources
+│   └── namespaces/   # Namespace definitions
 └── other-config/     # Other shared configurations
 ```
 
@@ -98,7 +102,7 @@ projects:
 ```yaml
 clusters:
   - name: cluster3
-    repoURL: https://github.com/yakovbeder/cluster3.git
+    repoURL: git@github.com:yakovbeder/cluster3.git
     targetRevision: main
     project: cluster3
     destination: cluster3
