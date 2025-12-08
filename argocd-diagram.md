@@ -4,20 +4,20 @@
 
 ```mermaid
 flowchart TB
-    Root([app-of-apps<br/>Root Application])
+    Root([app-of-apps Root Application])
 
-    subgraph wave0["Wave 0: AppProjects"]
+    subgraph wave0["Wave 0"]
         Proj1[in-cluster-project]
     end
 
-    subgraph wave1["Wave 1: Global ApplicationSet"]
+    subgraph wave1["Wave 1"]
         GlobalAS{{global-applicationset}}
         GlobalApp1[htpasswd]
         GlobalApp2[certificates]
         GlobalApp3[resources]
     end
 
-    subgraph wave2["Wave 2: Cluster ApplicationSets"]
+    subgraph wave2["Wave 2"]
         subgraph cluster1["in-cluster"]
             Cluster1AS{{in-cluster-applicationset}}
             App1[cluster-scope]
@@ -47,13 +47,13 @@ flowchart TB
     style wave0 fill:#ff9800,stroke:#e65100,color:#000
     style Proj1 fill:#ffe0b2,stroke:#ff9800,color:#000
     
-    style wave1 fill:#4caf50,stroke:#2e7d32,color:#fff
+    style wave1 fill:#4caf50,stroke:#2e7d32,color:#000
     style GlobalAS fill:#a5d6a7,stroke:#4caf50,color:#000
     style GlobalApp1 fill:#e8f5e9,stroke:#81c784,color:#000
     style GlobalApp2 fill:#e8f5e9,stroke:#81c784,color:#000
     style GlobalApp3 fill:#e8f5e9,stroke:#81c784,color:#000
     
-    style wave2 fill:#e91e63,stroke:#ad1457,color:#fff
+    style wave2 fill:#e91e63,stroke:#ad1457,color:#000
     style cluster1 fill:#fce4ec,stroke:#e91e63,color:#000
     style Cluster1AS fill:#f48fb1,stroke:#e91e63,color:#000
     style App1 fill:#fff,stroke:#f48fb1,color:#000
