@@ -1,67 +1,189 @@
 # ArgoCD Application Structure Diagram
 
-## Application Hierarchy (Mermaid)
+## Application Hierarchy
 
 ```mermaid
-graph TD
-    Root[app-of-apps<br/>Root Application] --> Wave0[Wave 0: AppProjects]
-    Root --> Wave1[Wave 1: Global ApplicationSet]
-    Root --> Wave2[Wave 2: Cluster ApplicationSets]
+flowchart TB
+    subgraph root[" "]
+        direction TB
+        Root([🚀 app-of-apps<br/>Root Application])
+    end
+
+    subgraph wave0[" 🏗️ Wave 0: AppProjects "]
+        Proj1[📁 in-cluster-project]
+    end
+
+    subgraph wave1[" 🌍 Wave 1: Global ApplicationSet "]
+        GlobalAS{{🔄 global-applicationset}}
+        subgraph globalApps[" Global Apps → All Clusters "]
+            GlobalApp1[🔐 htpasswd]
+            GlobalApp2[📜 certificates]
+            GlobalApp3[📦 resources]
+        end
+    end
+
+    subgraph wave2[" 🎯 Wave 2: Cluster ApplicationSets "]
+        subgraph cluster1[" 🖥️ in-cluster "]
+            Cluster1AS{{🔄 in-cluster-applicationset}}
+            App1[⚙️ cluster-scope]
+            App2[📦 operators]
+            App3[💾 etcd-backup]
+            App4[🔧 machineconfig]
+            App5[🗑️ garbagecollection]
+        end
+    end
+
+    Root --> wave0
+    Root --> wave1
+    Root --> wave2
+
+    GlobalAS --> globalApps
+
+    Cluster1AS --> App1
+    Cluster1AS --> App2
+    Cluster1AS --> App3
+    Cluster1AS --> App4
+    Cluster1AS --> App5
+
+    %% Styling
+    style root fill:#1a73e8,stroke:#1557b0,color:#fff
+    style Root fill:#1a73e8,stroke:#1557b0,color:#fff
     
-    Wave0 --> Proj1[cluster1-project]
-    Wave0 --> Proj2[cluster2-project]
+    style wave0 fill:#ff9800,stroke:#e65100,color:#000
+    style Proj1 fill:#ffe0b2,stroke:#ff9800
     
-    Wave1 --> GlobalAS[global ApplicationSet]
-    GlobalAS --> GlobalApp1[cluster1-htpasswd]
-    GlobalAS --> GlobalApp2[cluster1-certificates]
-    GlobalAS --> GlobalApp3[cluster2-htpasswd]
-    GlobalAS --> GlobalApp4[cluster2-certificates]
+    style wave1 fill:#4caf50,stroke:#2e7d32,color:#fff
+    style GlobalAS fill:#81c784,stroke:#4caf50
+    style globalApps fill:#c8e6c9,stroke:#4caf50
+    style GlobalApp1 fill:#e8f5e9,stroke:#81c784
+    style GlobalApp2 fill:#e8f5e9,stroke:#81c784
+    style GlobalApp3 fill:#e8f5e9,stroke:#81c784
     
-    Wave2 --> Cluster1AS[cluster1 ApplicationSet]
-    Wave2 --> Cluster2AS[cluster2 ApplicationSet]
-    
-    Cluster1AS --> App1[cluster1-cluster-scope]
-    Cluster1AS --> App2[cluster1-operators]
-    Cluster1AS --> App3[cluster1-etcd-backup]
-    Cluster1AS --> App4[cluster1-machineconfig]
-    Cluster1AS --> App5[cluster1-garbagecollection]
-    
-    Cluster2AS --> App6[cluster2-cluster-scope]
-    Cluster2AS --> App7[cluster2-operators]
-    Cluster2AS --> App8[cluster2-etcd-backup]
-    Cluster2AS --> App9[cluster2-machineconfig]
-    Cluster2AS --> App10[cluster2-garbagecollection]
-    
-    style Root fill:#e1f5ff
-    style Wave0 fill:#fff4e1
-    style Wave1 fill:#e8f5e9
-    style Wave2 fill:#fce4ec
-    style GlobalAS fill:#c8e6c9
-    style Cluster1AS fill:#f8bbd0
-    style Cluster2AS fill:#f8bbd0
+    style wave2 fill:#e91e63,stroke:#ad1457,color:#fff
+    style cluster1 fill:#fce4ec,stroke:#e91e63
+    style Cluster1AS fill:#f48fb1,stroke:#e91e63
+    style App1 fill:#fff,stroke:#f48fb1
+    style App2 fill:#fff,stroke:#f48fb1
+    style App3 fill:#fff,stroke:#f48fb1
+    style App4 fill:#fff,stroke:#f48fb1
+    style App5 fill:#fff,stroke:#f48fb1
 ```
 
 ## Sync Wave Flow
 
 ```mermaid
 sequenceDiagram
-    participant ArgoCD
-    participant Wave0 as Wave 0<br/>AppProjects
-    participant Wave1 as Wave 1<br/>Global Apps
-    participant Wave2 as Wave 2<br/>Cluster Apps
-    participant Cluster1
-    participant Cluster2
+    autonumber
     
-    ArgoCD->>Wave0: Deploy AppProjects
-    Wave0->>Cluster1: Create cluster1-project
-    Wave0->>Cluster2: Create cluster2-project
+    box rgb(26, 115, 232) ArgoCD Control Plane
+        participant ArgoCD as 🎮 ArgoCD
+    end
     
-    ArgoCD->>Wave1: Deploy Global ApplicationSet
-    Wave1->>Cluster1: Deploy global configs<br/>(htpasswd, certificates)
-    Wave1->>Cluster2: Deploy global configs<br/>(htpasswd, certificates)
+    box rgb(255, 152, 0) Wave 0
+        participant Wave0 as 🏗️ AppProjects
+    end
     
-    ArgoCD->>Wave2: Deploy Cluster ApplicationSets
-    Wave2->>Cluster1: Deploy cluster1 apps<br/>(operators, etcd-backup, etc.)
-    Wave2->>Cluster2: Deploy cluster2 apps<br/>(operators, etcd-backup, etc.)
+    box rgb(76, 175, 80) Wave 1
+        participant Wave1 as 🌍 Global Apps
+    end
+    
+    box rgb(233, 30, 99) Wave 2
+        participant Wave2 as 🎯 Cluster Apps
+    end
+    
+    box rgb(96, 125, 139) Target Clusters
+        participant InCluster as 🖥️ in-cluster
+    end
+
+    Note over ArgoCD: Helm chart generates<br/>all resources
+
+    ArgoCD->>+Wave0: 1️⃣ Deploy AppProjects
+    Wave0->>InCluster: Create in-cluster-project
+    Wave0-->>-ArgoCD: ✅ Projects ready
+
+    ArgoCD->>+Wave1: 2️⃣ Deploy Global ApplicationSet
+    Wave1->>InCluster: Deploy htpasswd
+    Wave1->>InCluster: Deploy certificates
+    Wave1->>InCluster: Deploy resources
+    Wave1-->>-ArgoCD: ✅ Global configs deployed
+
+    ArgoCD->>+Wave2: 3️⃣ Deploy Cluster ApplicationSets
+    Wave2->>InCluster: Discover & deploy apps<br/>(cluster-scope, operators,<br/>etcd-backup, machineconfig,<br/>garbagecollection)
+    Wave2-->>-ArgoCD: ✅ Cluster apps deployed
+
+    Note over ArgoCD,InCluster: 🎉 All applications synced!
 ```
+
+## Repository Relationship
+
+```mermaid
+flowchart LR
+    subgraph github[" ☁️ GitHub "]
+        direction TB
+        subgraph aoa[" 📂 beder-gitops-aoa "]
+            AOARoot[app-of-apps-application.yaml]
+            HelmChart[app-of-apps/<br/>Helm Chart]
+            GlobalConfigs[global-configs/<br/>htpasswd, certificates, resources]
+        end
+        
+        subgraph clusterRepos[" 📂 Cluster Repositories "]
+            InClusterRepo[in-cluster.git<br/>cluster-scope, operators, etc.]
+        end
+    end
+
+    subgraph argocd[" 🎮 ArgoCD "]
+        RootApp([Root Application])
+        AppSets([ApplicationSets])
+        Apps([Applications])
+    end
+
+    subgraph ocp[" 🔴 OpenShift Clusters "]
+        InClusterOCP[in-cluster]
+    end
+
+    AOARoot -->|deploys| RootApp
+    HelmChart -->|generates| AppSets
+    GlobalConfigs -->|source for| Apps
+    InClusterRepo -->|source for| Apps
+    
+    RootApp -->|creates| AppSets
+    AppSets -->|creates| Apps
+    Apps -->|syncs to| InClusterOCP
+
+    style github fill:#24292e,stroke:#1b1f23,color:#fff
+    style aoa fill:#0366d6,stroke:#0256b9,color:#fff
+    style clusterRepos fill:#28a745,stroke:#22863a,color:#fff
+    style argocd fill:#e91e63,stroke:#ad1457,color:#fff
+    style ocp fill:#ee0000,stroke:#cc0000,color:#fff
+    
+    style AOARoot fill:#58a6ff,stroke:#0366d6
+    style HelmChart fill:#58a6ff,stroke:#0366d6
+    style GlobalConfigs fill:#58a6ff,stroke:#0366d6
+    style InClusterRepo fill:#7ee787,stroke:#28a745
+    
+    style RootApp fill:#f48fb1,stroke:#e91e63
+    style AppSets fill:#f48fb1,stroke:#e91e63
+    style Apps fill:#f48fb1,stroke:#e91e63
+    
+    style InClusterOCP fill:#ff6b6b,stroke:#ee0000
+```
+
+## Legend
+
+| Symbol | Meaning |
+|--------|---------|
+| 🚀 | Root Application |
+| 🏗️ | AppProjects (Wave 0) |
+| 🌍 | Global Configurations (Wave 1) |
+| 🎯 | Cluster-specific Apps (Wave 2) |
+| 🔄 | ApplicationSet |
+| 📁 | AppProject |
+| 🖥️ | Cluster |
+| ⚙️ | Configuration |
+| 📦 | Operators/Resources |
+| 🔐 | Authentication |
+| 📜 | Certificates |
+| 💾 | Backup |
+| 🔧 | Machine Config |
+| 🗑️ | Garbage Collection |
 
