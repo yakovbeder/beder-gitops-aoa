@@ -62,7 +62,7 @@ global:
   enabled: true
   repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git
   targetRevision: main
-  project: default
+  project: global
   path: "global-configs"
   syncWave: "1"
 ```
@@ -119,7 +119,7 @@ clusters:
 - `enabled`: Enable or disable the global ApplicationSet (default: `true`)
 - `repoURL`: Git repository URL (same as app-of-apps repository)
 - `targetRevision`: Branch or tag (e.g., `main`, `master`)
-- `project`: ArgoCD project name (typically "default")
+- `project`: ArgoCD project name (typically "global")
 - `path`: Directory path containing global configurations (e.g., "global-configs")
 - `syncWave`: Deployment order (always "1")
 
