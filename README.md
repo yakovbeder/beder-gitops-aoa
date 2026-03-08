@@ -61,7 +61,7 @@ The `global` section in `app-of-apps/values.yaml` controls the shared Applicatio
 global:
   enabled: true
   repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git
-  targetRevision: v2.1
+  targetRevision: v2.2
   project: global
   path: "global-configs"
   syncWave: "1"
@@ -95,7 +95,7 @@ To add a new cluster, update `app-of-apps/values.yaml` with a new entry under `c
 clusters:
   - name: cluster3
     repoURL: git@github.com:yakovbeder/cluster3.git
-    targetRevision: v2.1
+    targetRevision: v2.2
     project: cluster3
     destination: cluster3
     syncWave: "2"

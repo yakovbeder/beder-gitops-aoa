@@ -1,7 +1,7 @@
 global:
   enabled: true
   repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git
-  targetRevision: v2.1
+  targetRevision: v2.2
   project: global
   path: "global-configs"
   syncWave: "1"
@@ -9,13 +9,13 @@ global:
 clusters:
   - name: cluster1
     repoURL: git@github.com:yakovbeder/cluster1.git
-    targetRevision: v2.1
+    targetRevision: v2.2
     project: cluster1
     destination: cluster1
     syncWave: "2"
   # - name: cluster2
   #   repoURL: git@github.com:yakovbeder/cluster2.git
-  #   targetRevision: main
+  #   targetRevision: v2.2
   #   project: cluster2
   #   destination: cluster2
   #   syncWave: "2"
