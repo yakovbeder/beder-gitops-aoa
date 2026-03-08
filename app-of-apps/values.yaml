@@ -1,9 +1,3 @@
-# projects:
-#   - name: cluster1
-#     syncWave: "0"
-#   - name: cluster2
-#     syncWave: "0"
-
 global:
   enabled: true
   repoURL: git@github.com:yakovbeder/beder-gitops-aoa.git

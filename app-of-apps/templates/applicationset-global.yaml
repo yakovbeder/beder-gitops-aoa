@@ -40,6 +40,5 @@ spec:
       destination:
         name: '{{ "{{.destination}}" }}'
       syncPolicy: {}
----
 {{- end }}
 

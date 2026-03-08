@@ -1,21 +1,43 @@
-{{- range .Values.projects }}
+{{- $globalEnabled := and .Values.global .Values.global.enabled }}
+{{- if $globalEnabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: {{ .name }}
+  name: {{ .Values.global.project }}
   namespace: openshift-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: '{{ .syncWave }}'
+    argocd.argoproj.io/sync-wave: '0'
 spec:
-  description: ArgoCD project for {{ .name }}
+  description: ArgoCD project for global configurations
   sourceRepos:
-    - '*'
+    - '{{ .Values.global.repoURL }}'
   destinations:
     - namespace: '*'
       server: '*'
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
+{{- end }}
+{{- range $index, $cluster := .Values.clusters }}
+{{- if or $globalEnabled (gt $index 0) }}
 ---
+{{- end }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ $cluster.project }}
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+spec:
+  description: ArgoCD project for {{ $cluster.name }}
+  sourceRepos:
+    - '{{ $cluster.repoURL }}'
+  destinations:
+    - namespace: '*'
+      name: {{ $cluster.destination }}
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
 {{- end }}
 
