@@ -1,7 +1,5 @@
-{{- range $index, $cluster := .Values.clusters }}
-{{- if gt $index 0 }}
+{{- range .Values.clusters }}
 ---
-{{- end }}
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:

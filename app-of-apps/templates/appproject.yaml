@@ -18,24 +18,22 @@ spec:
     - group: '*'
       kind: '*'
 {{- end }}
-{{- range $index, $cluster := .Values.clusters }}
-{{- if or $globalEnabled (gt $index 0) }}
+{{- range .Values.clusters }}
 ---
-{{- end }}
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: {{ $cluster.project }}
+  name: {{ .project }}
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/sync-wave: '0'
 spec:
-  description: ArgoCD project for {{ $cluster.name }}
+  description: ArgoCD project for {{ .name }}
   sourceRepos:
-    - '{{ $cluster.repoURL }}'
+    - '{{ .repoURL }}'
   destinations:
     - namespace: '*'
-      name: {{ $cluster.destination }}
+      name: {{ .destination }}
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
